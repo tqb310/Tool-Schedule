@@ -23,14 +23,14 @@ function handleChangeFile(e) {
     fileReader.onload = (e) => {
         let data = e.target.result;
         let workBook = XLSX.read(data, { type: 'binary' });
-        // console.log(workBook)
         let workSheets = {};
         workBook.SheetNames.forEach(sheetName => {
             workSheets[sheetName] = XLSX.utils.sheet_to_json(workBook.Sheets[sheetName])
-        });        
+        });
         let json = JSON.stringify({ 'TKB': convertToSubject(workSheets, 'TKB LT').concat(convertToSubject(workSheets, 'TKB TH')) });
         localStorage.setItem('fileData', json);
         localStorage.setItem('fileName', file.name);
+        //console.log(workSheets)
     }
 };
 
@@ -44,10 +44,11 @@ function handleClickButton(e) {
     errorClassCode = [];
     //Check file upload
     if (!localStorage.getItem('fileData')) {
-        alert.classList.remove('d-none');
-        alert.classList.add('d-block');        
+        alert.classList.remove('d-none'); 
         alert.innerHTML = `<span>Bạn chưa tải file lên</span>`
         return;
+    } else {
+        alert.classList.add('d-none'); 
     }
     //-----------------
     const data = JSON.parse(localStorage.getItem('fileData'));
@@ -68,17 +69,34 @@ function handleClickButton(e) {
     if (localStorage.getItem('subjectList'))
         localStorage.removeItem('subjectList');
     localStorage.setItem('subjectList', JSON.stringify(subjectList));
-    renderTimeTable(subjectList);
+    //Render time table
+    computeCellOnRow(subjectList)
+        .then((data) => {
+            document.getElementById('subjectContent').classList.remove('d-none');
+            if(!errorClassCode.length)
+                alert.classList.add('d-none');
+            renderTimeTable(subjectList, data)
+        })
+        .catch((err) => {
+            console.log(err);
+            document.getElementById('subjectContent').classList.add('d-none');
+            alert.classList.remove('d-none');                    
+            alert.innerHTML = `<span class='lead'>Trùng lịch: 
+                                    <span class='font-weight-bold'>
+                                        ${err[0].classCode}:Thứ ${err[0].weekDay} Tiết ${err[0].period} <->  
+                                        ${err[1].classCode}:Thứ ${err[1].weekDay} Tiết ${err[1].period}
+                                    </span>
+                                </span>`
+        })
+
     //Alert error message
     if (errorClassCode.length) {
-        alert.classList.remove('d-none');
-        alert.classList.add('d-block');
+        alert.classList.remove('d-none');        
         // console.log(alert.children[]);
         alert.innerHTML = `<span class='lead'>Mã lớp không tồn tại: 
                                 <span class='font-weight-bold'>${errorClassCode.join(',')}</span>
                             </span>`
-    } else {
-        alert.classList.remove('d-block');
+    } else {     
         alert.classList.add('d-none');
     }
 }
@@ -98,3 +116,34 @@ function convertToSubject(data, key) {
         }
     })
 }
+
+//--------------------------------------------------------------------------------//
+//FUNCTION 1: Computing cells on every row (2 -> 10). *Note: Row 1 is always full of cells.
+function computeCellOnRow(data) {
+
+    return new Promise((rs, rj) => {
+        //Create initial cellOnRow object   
+        let cellOnRow = [];
+        for (let i = 0; i < 9; i++)
+            cellOnRow.push(['2', '3', '4', '5', '6', '7']);
+        //----------------------------------------------------
+        let handleCellOnRow = cellOnRow.map((weekDay, index) => {
+            let tempWeekDay = [...weekDay];
+            data.forEach(subject => {
+                if (subject.period.slice(1).indexOf((index + 2) % 10) !== -1) {
+                    let i = tempWeekDay.indexOf(subject.weekDay);
+                    if (i == -1) {
+                        //console.log(subject); 
+                        const dupSubject = data.find(item => item.weekDay == subject.weekDay && item.period.indexOf(index + 2) !== -1);
+                        //console.log(dupSubject);
+                        rj([subject, dupSubject]);
+                    }
+                    tempWeekDay.splice(i, 1);
+                }
+            });
+            return tempWeekDay;
+        });
+        rs(handleCellOnRow);
+    })
+}
+//--------------------------------------------------------------------------------//

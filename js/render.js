@@ -1,32 +1,12 @@
 import time from './constants.js'
 const subjectContent = document.getElementById('subjectContent');
 
-//--------------------------------------------------------------------------------//
-//FUNCTION 1: Computing cells on every row (2 -> 10). *Note: Row 1 is always full of cells.
-function computeCellOnRow(data) {
-    //Create initial cellOnRow object
-    let cellOnRow = [];
-    for (let i = 0; i < 9; i++)
-        cellOnRow.push(['2', '3', '4', '5', '6', '7']);
-    return cellOnRow.map((weekDay, index) => {
-        let tempWeekDay = [...weekDay];
-        data.forEach(subject => {
-            if (subject.period.slice(1).indexOf((index + 2) % 10) !== -1) {
-                let i = tempWeekDay.indexOf(subject.weekDay);                
-                tempWeekDay.splice(i, 1);
-            }
-        });
-        return tempWeekDay;
-    });
-}
-//--------------------------------------------------------------------------------//
-
 
 //--------------------------------------------------------------------------------//
 //FUNCTION 2: Render time table
-function renderTimeTable(data) {
+function renderTimeTable(data, handledCellOnRow) {
     //Get cells on every row after handling
-    const handledCellOnRow = computeCellOnRow(data);
+    //handledCellOnRow = computeCellOnRow(data);
 
     //Insert first row
     handledCellOnRow.unshift(['2', '3', '4', '5', '6', '7']);
@@ -62,7 +42,7 @@ function renderTimeTable(data) {
             `
     }
     data.forEach(subject => {
-        if (subject.practiceType.indexOf('HT2') !== -1)
+        if ('ĐAHT2'.indexOf(subject.practiceType) !== -1)
             htmlContent += `
                 <tr>
                     <td class=bg-white colspan='7'>
