@@ -1,0 +1,39 @@
+:root {
+    --custom-red: #DC3545;
+}
+
+* {
+    box-sizing: border-box;    
+}
+
+.container-fluid {
+    width: 95%;
+    margin: 10px auto;
+}
+
+.title__list {
+    padding-left: 20px;
+}
+
+.title__list li::marker {
+    color: var(--primary);
+}
+
+.row {
+    margin: 0;
+}
+
+.table {
+    font-size: 0.9em;
+    margin-bottom: 100px;
+}
+
+.table th, .table td {
+    padding: 5px 3px;
+    max-width: 65px;
+    vertical-align: middle;
+}
+
+.table p {
+    margin-bottom: 5px;
+}
