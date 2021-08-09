@@ -12,8 +12,7 @@ function computeCellOnRow(data) {
         let tempWeekDay = [...weekDay];
         data.forEach(subject => {
             if (subject.period.slice(1).indexOf((index + 2) % 10) !== -1) {
-                let i = tempWeekDay.indexOf(subject.weekDay);
-                //console.log(i);
+                let i = tempWeekDay.indexOf(subject.weekDay);                
                 tempWeekDay.splice(i, 1);
             }
         });

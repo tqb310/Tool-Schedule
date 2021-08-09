@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tạo TKB</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.7/css/all.css">
     <link rel="stylesheet" href="style/index.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js" integrity="sha512-jDEmOIskGs/j5S3wBWQAL4pOYy3S5a0y3Vav7BgXHnCVcUBXkf1OqzYS6njmDiKyqes22QEX8GSIZZ5pGk+9nA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"
+        integrity="sha512-jDEmOIskGs/j5S3wBWQAL4pOYy3S5a0y3Vav7BgXHnCVcUBXkf1OqzYS6njmDiKyqes22QEX8GSIZZ5pGk+9nA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
+
 <body>
     <div class="container-fluid">
         <h2 class="gutters">Tạo TKB theo mã lớp học</h2>
@@ -17,17 +22,18 @@
             <li class="h5">
                 <p class="text-primary">Tải file excel TKB của trường</p>
                 <div class="custom-file">
-                    <input id="myFile" type="file" class="custom-file-input" accept=".xls,.xlsx"/>
-                    <label for="myFile" class="custom-file-label text-success" >Tải file</label>
+                    <input id="myFile" type="file" class="custom-file-input" accept=".xls,.xlsx" />
+                    <label for="myFile" class="custom-file-label text-danger">Chưa tải file lên</label>
                 </div>
             </li>
             <li class="h5">
                 <p class="text-primary">Nhập vào danh sách mã lớp học</p>
                 <div>
                     <textarea name="textarea" id="textarea" class="col-12 form-control" rows="10"
-                    placeholder="Mỗi lớp trên một hàng. Ví dụ: &#10;SE100.K11&#10;SS002.K11&#10;SE114.K12"                    
-                   ></textarea>
-                   <button id="btnSubmit" class="btn btn-success my-3">Chấp nhận</button>
+                        placeholder="Mỗi lớp trên một hàng. Ví dụ: &#10;SE100.K11&#10;SS002.K11&#10;SE114.K12"></textarea>
+                    <button id="btnSubmit" class="btn btn-success my-3">Chấp nhận</button>
+                </div>
+                <div id="alert" class="alert alert-danger d-none">                    
                 </div>
             </li>
             <li class="h5">
@@ -36,22 +42,34 @@
                     <thead class="table-primary">
                         <tr>
                             <th scope="col">Thứ/Tiết</th>
-                            <th >Thứ 2</th>
-                            <th >Thứ 3</th>
-                            <th >Thứ 4</th>
-                            <th >Thứ 5</th>
-                            <th >Thứ 6</th>
-                            <th >Thứ 7</th>
+                            <th>Thứ 2</th>
+                            <th>Thứ 3</th>
+                            <th>Thứ 4</th>
+                            <th>Thứ 5</th>
+                            <th>Thứ 6</th>
+                            <th>Thứ 7</th>
                         </tr>
                     </thead>
                     <tbody id="subjectContent">
 
                     </tbody>
-                </table>               
+                </table>
             </li>
         </ol>
-    </div>    
+    </div>
+    <script>
+        const labelFile = document.querySelector(".custom-file label");
+        const fileName = localStorage.getItem('fileName');
+        //Set file name for label       
+        if(fileName){
+            labelFile.innerText = fileName;
+            labelFile.classList.remove('text-danger');        
+            labelFile.classList.add('text-success');
+        }else {
+            labelFile.innerText = 'Chưa tải file lên'
+        }
+    </script>
     <script type="module" src="js/event.js"></script>
-    
 </body>
+
 </html>
