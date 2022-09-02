@@ -55,7 +55,7 @@ function handleClickButton(e) {
 
     const subjectList = textInput.filter(classCode => {
         if (classCode) {
-            if (data['TKB'].find(sj => classCode == sj.classCode)) {
+            if (data['TKB'].some(sj => classCode == sj.classCode)) {
                 return classCode;
             } else {
                 errorClassCode.push(classCode);
@@ -118,7 +118,7 @@ function convertToSubject(data, key) {
 }
 
 //--------------------------------------------------------------------------------//
-//FUNCTION 1: Computing cells on every row (2 -> 10). *Note: Row 1 is always full of cells.
+//FUNCTION 1: Computing cells on each row (2 -> 10). *Note: Row 1 is always full of cells.
 function computeCellOnRow(data) {
 
     return new Promise((rs, rj) => {
@@ -126,13 +126,13 @@ function computeCellOnRow(data) {
         let cellOnRow = [];
         for (let i = 0; i < 9; i++)
             cellOnRow.push(['2', '3', '4', '5', '6', '7']);
-        //----------------------------------------------------
+        //-------------------------------------------------------
         let handleCellOnRow = cellOnRow.map((weekDay, index) => {
             let tempWeekDay = [...weekDay];
             data.forEach(subject => {
                 if (subject.period.slice(1).indexOf((index + 2) % 10) !== -1) {
                     let i = tempWeekDay.indexOf(subject.weekDay);
-                    if (i == -1) {
+                    if (i === -1) {
                         //console.log(subject); 
                         const dupSubject = data.find(item => item.weekDay == subject.weekDay && item.period.indexOf(index + 2) !== -1);
                         //console.log(dupSubject);

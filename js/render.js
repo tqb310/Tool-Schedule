@@ -26,7 +26,7 @@ function renderTimeTable(data, handledCellOnRow) {
                         <p class="lead">${subject.classRoom || ''}</p>
                         <p class="lead">${subject.startDate ? 'BĐ: ' + subject.startDate : ''}</p>
                         <p class="lead">${subject.endDate ? 'KT: ' + subject.endDate : ''}</p>
-                    </td>   
+                    </td>
                 `
             return '<td></td>'
         }).join('');
